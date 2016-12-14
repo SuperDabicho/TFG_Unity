@@ -1,25 +1,30 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
+
+[System.Serializable]
 public class Primerobjeto : MonoBehaviour {
-	//store gameObject reference
 
-	public string[] respuestas= new string[4]{"C","C++", "Java", "C#"};
+
+	public string[] respuestas= new string[4]{"C++", "Java", "C#","C"};
 	public string[] preguntas= new string[4]{"Lenguaje usado en EDA",
-		"Es para tontos. Está todo hecho",
-		"Deberíamos saber mucho \nmás de este para el TFG",
+		"Es como el sexo anal",
+		"Deberiamos saber mucho \nmas de este para el TFG",
 		"Lenguaje a casi bajo nivel \nen el que se programan lo S.O."};
-	public string[] soluciones = new string[4]{"C++", "Java", "C#", "C"};
 
-	GameObject [] resp;
-	GameObject [] preg;
-	GameObject [] sol;
+	private int correctas=0;
+
+	GameObject victoria;
 
 	void Start()
 	{
-		resp=new GameObject[respuestas.Length];
-		preg=new GameObject[preguntas.Length];
-		sol = new GameObject[soluciones.Length];
+		bool[] sols = new bool[respuestas.Length];
+		for (int a = 0; a < sols.Length; a++) {
+			sols [a] = false;
+		}
+		GameObject [] preg=new GameObject[preguntas.Length];
+		GameObject [] resp=new GameObject[respuestas.Length];
 		//spawn object
 		for(int i=0;i<preguntas.Length;i++){
 			preg [i] = new GameObject("Pregunta"+i.ToString());
@@ -28,25 +33,52 @@ public class Primerobjeto : MonoBehaviour {
 			preg [i].AddComponent<BoxCollider2D>();
 			preg [i].GetComponent<BoxCollider2D> ().isTrigger = true;
 			preg [i].transform.position = new Vector3 (-13,(-5*i)+9, 0);
-			sol [i] = new GameObject ("Solucion" + i.ToString ());
-			sol [i].AddComponent<TextMesh> ();
-			sol [i].GetComponent<TextMesh> ().text = soluciones [i];
-			sol [i].GetComponent<TextMesh> ().color = new Color (0, 0, 0, 0);
-			sol [i].transform.parent = preg [i].transform;
+			preg [i].AddComponent<Solucion> ();
+			preg [i].GetComponent<Solucion> ().SetSolucion (i);
 		}
+
+
 		for (int i = 0; i < respuestas.Length; i++) {
-			resp [i] = new GameObject("Respuesta"+i.ToString());
+			bool respondida = true;
+			int k = 0;
+			while (respondida) {
+				k = Random.Range (0, 4);
+				respondida = sols [k];
+			}
+			sols [k] = true;
+			resp [i] = new GameObject ("Respuesta" + i.ToString ());
 			resp [i].AddComponent<TextMesh> ();
-			resp [i].GetComponent<TextMesh> ().text = respuestas [i];
-			resp [i].transform.position = new Vector3 (11,(-5*i)+9, 0);
+			resp [i].GetComponent<TextMesh> ().text = respuestas [k];
+			resp [i].transform.position = new Vector3 (11, (-5 * i) + 9, 0);
 			resp [i].AddComponent<Rigidbody2D> ();
 			resp [i].GetComponent<Rigidbody2D> ().gravityScale = 0;
-			resp [i].AddComponent<BoxCollider2D>();
+			resp [i].AddComponent<BoxCollider2D> ();
 			resp [i].GetComponent<BoxCollider2D> ().isTrigger = true;
-			resp [i].AddComponent<TodoPoderoso>();
+			resp [i].AddComponent<Solucion> ();
+			resp [i].GetComponent<Solucion> ().SetSolucion (k);
+			resp [i].AddComponent<TodoPoderoso> ();
 		}
 
+		//Crea el panel de victoria
+		victoria = new GameObject("PanelVictoria");
+		victoria.AddComponent<TextMesh> ();
+		victoria.GetComponent<TextMesh>().text = "VICTORIA";
+		victoria.GetComponent<TextMesh> ().fontSize = 80;
+		victoria.transform.position = new Vector3 (-19,5,0);
+		victoria.SetActive (false);
 
+	}
+
+	void Update () {
+		for(int j=0; j<4; j++){
+			if (preg [j].GetComponent<TextMesh> ().color.Equals(Color.green)) {
+				correctas += 1;
+			}
+		}
+		if (correctas == 4) {
+			victoria.SetActive (true);
+		} else
+			correctas = 0;
 	}
 
 

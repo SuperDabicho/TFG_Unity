@@ -11,7 +11,6 @@ public class TodoPoderoso : MonoBehaviour {
 	}
 
 	void OnMouseDown(){
-		Debug.Log (this.name);
 		Cursor.visible = false;
 		transform.GetComponent<TextMesh> ().fontStyle = FontStyle.Bold;
 	}
@@ -31,17 +30,33 @@ public class TodoPoderoso : MonoBehaviour {
 		objPosition.z = 0;
 
 		transform.position = objPosition;
+//		if (transform.GetComponent<TextMesh>().color.Equals(new Color(0, 255, 0))) {
+//			float x = transform.position.x-20;
+//			float y = transform.position.y;
+//			transform.position = new Vector3 (x, y, 0);
+//		}
 	}
 	//fondo.GetComponent<Renderer>().material.color = new Color(255, 0, 0);
 
 	void OnTriggerEnter2D(Collider2D other){
 		if (comprobar (other)) {
-			Debug.Log ("CORRECTO!!");
-			transform.GetComponent<TextMesh>().color = new Color(0, 255, 0);
-			other.transform.GetComponent<TextMesh>().color = new Color(0, 255, 0);
+			transform.GetComponent<TextMesh>().color = Color.green;
 		} else {
-			transform.GetComponent<TextMesh>().color = new Color(255, 0, 0);
-			Debug.Log ("ERROOOR!!");
+			transform.GetComponent<TextMesh>().color = Color.red;
+		}
+	}
+
+	void OnTriggerStay2D(Collider2D other){ 
+		if (Cursor.visible) {	//Input.GetMouseButtonUp(0) 0-left 1-right 2-middle
+			if (comprobar (other)) {
+				other.transform.GetComponent<TextMesh> ().color = Color.green;
+				Vector3 newPosition = new Vector3 (-17, other.transform.position.y, 0);
+				transform.position = newPosition;	
+				Destroy (transform.GetComponent<BoxCollider2D> ());//Evita que reaccione la pregunta con otra respuesta si ya esta solucionada.
+				Destroy (other.transform.GetComponent<BoxCollider2D> ());
+			} else {
+				other.transform.GetComponent<TextMesh>().color = Color.red;
+			}
 		}
 	}
 
@@ -51,8 +66,8 @@ public class TodoPoderoso : MonoBehaviour {
 	}
 
 	bool comprobar(Collider2D other){
-		string correcta = other.transform.GetChild(0).transform.GetComponent<TextMesh>().text;
-		string prueba = transform.GetComponent<TextMesh>().text;
+		int correcta= other.GetComponent<Solucion>().GetSolucion();
+		int prueba = transform.GetComponent<Solucion>().GetSolucion();
 		Debug.Log (correcta + " " + prueba);
 		return (correcta.Equals(prueba));
 	}
