@@ -68,7 +68,6 @@ public class TodoPoderoso : MonoBehaviour {
 	bool comprobar(Collider2D other){
 		int correcta= other.GetComponent<Solucion>().GetSolucion();
 		int prueba = transform.GetComponent<Solucion>().GetSolucion();
-		Debug.Log (correcta + " " + prueba);
 		return (correcta.Equals(prueba));
 	}
 }

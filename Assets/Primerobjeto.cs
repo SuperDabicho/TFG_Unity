@@ -6,25 +6,25 @@ using System.Collections.Generic;
 [System.Serializable]
 public class Primerobjeto : MonoBehaviour {
 
-
-	public string[] respuestas= new string[4]{"C++", "Java", "C#","C"};
-	public string[] preguntas= new string[4]{"Lenguaje usado en EDA",
-		"Es como el sexo anal",
-		"Deberiamos saber mucho \nmas de este para el TFG",
-		"Lenguaje a casi bajo nivel \nen el que se programan lo S.O."};
-
+    private Relaciones game= new Relaciones();
+	public string[] respuestas;
+	public string[] preguntas;
+	GameObject [] preg;
+	GameObject [] resp;
 	private int correctas=0;
 
 	GameObject victoria;
 
 	void Start()
 	{
+		preguntas=game.preguntas;
+		respuestas=game.respuestas;
 		bool[] sols = new bool[respuestas.Length];
 		for (int a = 0; a < sols.Length; a++) {
 			sols [a] = false;
 		}
-		GameObject [] preg=new GameObject[preguntas.Length];
-		GameObject [] resp=new GameObject[respuestas.Length];
+		preg=new GameObject[preguntas.Length];
+		resp=new GameObject[respuestas.Length];
 		//spawn object
 		for(int i=0;i<preguntas.Length;i++){
 			preg [i] = new GameObject("Pregunta"+i.ToString());
