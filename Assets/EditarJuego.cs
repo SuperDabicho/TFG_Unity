@@ -4,10 +4,9 @@ using System.Collections.Generic;
 
 
 [System.Serializable]
-public class Primerobjeto : MonoBehaviour {
+public class EditarJuego : MonoBehaviour {
 
-	public string archivoConf = "./Assets/PartidaGuardada.json";
-	private Relaciones game;
+	private Relaciones game= new Relaciones();
 	public string[] respuestas;
 	public string[] preguntas;
 	GameObject [] preg;
@@ -18,7 +17,6 @@ public class Primerobjeto : MonoBehaviour {
 
 	void Start()
 	{
-		game = new Relaciones(archivoConf);
 		preguntas=game.preguntas;
 		respuestas=game.respuestas;
 		bool[] sols = new bool[respuestas.Length];
@@ -31,10 +29,6 @@ public class Primerobjeto : MonoBehaviour {
 		for(int i=0;i<preguntas.Length;i++){
 			preg [i] = new GameObject("Pregunta"+i.ToString());
 			preg [i].AddComponent<TextMesh> ();
-
-			if(preguntas[i].Length > 30){
-				preguntas [i] = preguntas [i].Substring (0, 30) + "\n" + preguntas [i].Substring (30);
-			}
 			preg [i].GetComponent<TextMesh> ().text = preguntas [i];
 			preg [i].AddComponent<BoxCollider2D>();
 			preg [i].GetComponent<BoxCollider2D> ().isTrigger = true;
