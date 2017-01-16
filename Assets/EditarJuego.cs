@@ -6,7 +6,8 @@ using System.Collections.Generic;
 [System.Serializable]
 public class EditarJuego : MonoBehaviour {
 
-	private Relaciones game= new Relaciones();
+	public string ruta = "./Assets/PartidaGuardada.json";
+	private Relaciones game;
 	public string[] respuestas;
 	public string[] preguntas;
 
@@ -46,6 +47,7 @@ public class EditarJuego : MonoBehaviour {
 	}
 
 	void Start(){
+		game = new Relaciones("./Assets/PartidaGuardad.json");
 		preguntas=game.preguntas;
 		respuestas=game.respuestas;
 	}
